@@ -1,0 +1,18 @@
+<div class="wrapper">
+<div id="video-type"
+     class="title-text
+    <% if (type === 'all') { %>
+        gray
+    <% } else if(type === 'vod') { %>
+        purple
+    <% } else if(type === 'live') { %>
+        blue
+    <% } %>">
+    <%- type.toUpperCase() %>
+</div>
+
+<div id="video-plays" class="slider-text"><%- count.toLocaleString() %></div>
+
+<div id="plays-label" class="slider-text"> Plays </div>
+</div>
+
