@@ -23,7 +23,7 @@ define([
         },
 
         initialize: function(options) {
-            this.slideIndex = 1;
+            this.slideIndex = 0;
             this.videoDataList = options.videoDataList;
 
             var totalVideoCount = this.calculateTotalPlays(this.videoDataList);
@@ -45,7 +45,7 @@ define([
             this.popoverView = new PopoverView();
 
             this.popoverView.on("setColor", function(color) {
-                $(self.slides[self.slideIndex - 1]).css("background", color)
+                $(self.slides[self.slideIndex]).css("background", color)
             });
 
             this.$headerContent.append(this.popoverView.render().el);
@@ -59,7 +59,7 @@ define([
             this.showSlides(this.slideIndex,  this.animateNext.bind(this));
 
             this.slideInterval = setInterval(function() {
-                self.showSlides(self.slideIndex += 1, self.animateNext.bind(self));
+                self.showSlides(self.slideIndex + 1, self.animateNext.bind(self));
             }, 3000);
 
             return this;
@@ -75,24 +75,27 @@ define([
             var self = this;
 
             if (event.target.className === 'next') {
-                this.showSlides(this.slideIndex += 1, this.animateNext.bind(this));
+                this.showSlides(this.slideIndex + 1, this.animateNext.bind(this));
             } else {
-                this.showSlides(this.slideIndex -= 1, this.animatePrev.bind(this));
+                this.showSlides(this.slideIndex - 1, this.animatePrev.bind(this));
             }
 
             clearInterval(this.slideInterval);
             this.slideInterval = setInterval(function() {
-                self.showSlides(self.slideIndex += 1, self.animateNext.bind(self));
+                self.showSlides(self.slideIndex + 1, self.animateNext.bind(self));
             }, 3000);
         },
 
         showSlides: function(slideNumber, animateSlide) {
-            if (slideNumber > this.slides.length) {
-                this.slideIndex = 1
+            this.$sliderContent.css('backgroundColor', this.slides[this.slideIndex].style.backgroundColor);
+            this.slideIndex = slideNumber;
+
+            if (slideNumber > this.slides.length - 1) {
+                this.slideIndex = 0;
             }
 
-            if (slideNumber < 1) {
-                this.slideIndex = this.slides.length
+            if (slideNumber < 0) {
+                this.slideIndex = this.slides.length - 1;
             }
 
             for (var i = 0; i < this.slides.length; i++) {
@@ -103,7 +106,7 @@ define([
         },
 
         animateNext: function() {
-            $(this.slides[this.slideIndex-1]).css("display", "block").css({
+            $(this.slides[this.slideIndex]).css("display", "block").css({
                 left: this.$el.width()
             }).animate({
                 left: 0
@@ -111,7 +114,7 @@ define([
         },
 
         animatePrev: function() {
-            $(this.slides[this.slideIndex-1]).css("display", "block").css({
+            $(this.slides[this.slideIndex]).css("display", "block").css({
                 left: -this.$el.width()
             }).animate({
                 left: 0
